@@ -25,7 +25,7 @@
             </v-col>            
             <v-col cols="12" sm="6">
               <v-text-field
-                v-model="net_tax"
+                v-model="paid_grossalarysem"
                 label="Net profit after tax"
                 outlined
               ></v-text-field>
@@ -151,6 +151,23 @@ export default {
     };
   },
 
+  watch: {
+    slider: function(val) {
+      this.paid_summa = val;
+      this.slider = this.paid_summa;
+      this.paid_summa_moms = this.paid_summa * 0.25;
+      this.paid_totalsumma = this.paid_summa * 1.25;
+
+      this.paid_sum = this.paid_summa * 0.039;
+      this.paid_newsum = this.paid_summa - this.paid_sum * 0.039;
+      this.paid_socialsum = this.paid_newsum * 0.2390808;
+
+      this.paid_newsuminkl = this.paid_newsum - this.paid_socialsum;
+      this.paid_grosssalary = this.paid_newsuminkl * 0.3;
+      this.paid_grossalarysem = this.paid_grosssalary - this.paid_grosssalary * 0.3;
+    }
+  },
+
   async beforeMount() {
     this.getSelectedSalary();
   },
@@ -161,18 +178,7 @@ export default {
         .$get(`/invoices/${this.$route.params.id}`)
         .then(res => {
           Object.assign(this.selectedPaidSalary, res[0])
-          this.paid_summa = this.selectedPaidSalary.summa;
-          this.slider = this.paid_summa;
-          this.paid_summa_moms = this.paid_summa * 0.25;
-          this.paid_totalsumma = this.paid_summa * 1.25;
-
-          this.paid_sum = this.paid_summa * 0.039;
-          this.paid_newsum = this.paid_summa - this.paid_sum * 0.039;
-          this.paid_socialsum = this.paid_newsum * 0.2390808;
-
-          this.paid_newsuminkl = this.paid_newsum - this.paid_socialsum;
-          this.paid_grosssalary = this.paid_newsuminkl * 0.3;
-          this.paid_grossalarysem = this.paid_grosssalary - this.paid_grosssalary * 0.3;
+          this.slider = this.selectedPaidSalary.summa;
         })
         .catch(err => console.log(err));
     },

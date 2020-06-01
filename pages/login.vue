@@ -43,11 +43,15 @@
           </v-container>
         </v-container>
       </v-form>
+      <v-snackbar v-model="snackbar" :timeout="timeout" color="error">
+        {{ text }}
+        <v-btn color="white" text @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
+      <div class="d-flex justify-center" @click="forgetPassword()">
+        <a>Glömt ditt lösenord</a>
+        <v-icon color="#336882" class="ml-2">mdi-arrow-right-thick</v-icon>
+      </div>
     </v-col>
-    <v-snackbar v-model="snackbar" :timeout="timeout" color="error">
-      {{ text }}
-      <v-btn color="white" text @click="snackbar = false">Close</v-btn>
-    </v-snackbar>
   </v-row>
 </template>
 <script>
@@ -93,8 +97,13 @@ export default {
         this.snackbar = true;
       }
     },
+
     validate() {
       this.$refs.form.validate();
+    },
+
+    forgetPassword() {
+      this.$router.push("/resetpassword/useremail");
     }
   }
 };
